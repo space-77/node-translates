@@ -19,18 +19,14 @@ class Bing {
 }
 
 export default async function bingTranslator(texts: string | string[]) {
-  try {
-    texts = Array.isArray(texts) ? texts : [texts]
-    const { ig, iid, key, token } = await Bing.getAuthInfo()
-    const text = texts.join(JOIN_STR)
+  texts = Array.isArray(texts) ? texts : [texts]
+  const { ig, iid, key, token } = await Bing.getAuthInfo()
+  const text = texts.join(JOIN_STR)
 
-    const form = { text, key, token, to: 'en', fromLang: 'zh-Hans' }
-    const options = { headers: getApiHeaders(config.url), form }
-    const url = `${config.translator}?isVertical=1&IG=${ig}&IID=${iid}${config.queryCount++}`
-    const [{ translations }] = (await client.post(url, options).json()) as any[]
-    const textEn = translations[0].text as string
-    return textEn.split(SPLIT_STR).map((i, index) => ({ zh: texts[index], en: i.trim() }))
-  } catch (error) {
-    console.error(error)
-  }
+  const form = { text, key, token, to: 'en', fromLang: 'zh-Hans' }
+  const options = { headers: getApiHeaders(config.url), form }
+  const url = `${config.translator}?isVertical=1&IG=${ig}&IID=${iid}${config.queryCount++}`
+  const [{ translations }] = (await client.post(url, options).json()) as any[]
+  const textEn = translations[0].text as string
+  return textEn.split(SPLIT_STR).map((i, index) => ({ zh: texts[index], en: i.trim() }))
 }
