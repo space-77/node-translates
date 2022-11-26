@@ -5,6 +5,19 @@ declare const config: {
     url: string;
     translator: string;
 };
+export declare function getHostHeaders(url: string): {
+    Origin: string;
+    Referer: string;
+    'User-Agent': string;
+};
+export declare function getApiHeaders(url: string): {
+    Host: string;
+    Origin: string;
+    Referer: string;
+    'User-Agent': string;
+    'X-Requested-With': string;
+    'Content-Type': string;
+};
 export declare const getHeaders: (hostUrl: string, ifApi?: boolean) => {
     Origin: string;
     Referer: string;
