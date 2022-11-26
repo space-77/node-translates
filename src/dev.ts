@@ -1,12 +1,13 @@
 import { bingTranslator } from './index'
 import { baiduTranslator } from './index'
+import { iflyrecTranslator } from './index'
 
 ~(async () => {
   try {
-    const res = await baiduTranslator('你好')
+    const res = await iflyrecTranslator('你好')
     console.log(res)
-    // const res1 = await baiduTranslator(['你', '好', '沙漏', '湿巾', '绿萝', '口罩', '下班'])
-    // console.log(res1)
+    const res1 = await iflyrecTranslator(['你', '好', '沙漏', '湿巾', '绿萝', '口罩', '下班'])
+    console.log(res1)
   } catch (error) {
     console.error(error)
   }

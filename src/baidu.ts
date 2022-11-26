@@ -103,6 +103,7 @@ class Baidu {
 export type BaiduOptions = { ifIgnoreLimitOfLength?: boolean; limitOfLength?: number }
 
 export default async function baiduTranslator(texts: string | string[], options: BaiduOptions = {}) {
+  texts = Array.isArray(texts) ? texts : [texts]
   const text = Baidu.checkQueryText(texts, options)
   const { sign, token } = await Baidu.getAuthInfo(text)
 
@@ -119,5 +120,5 @@ export default async function baiduTranslator(texts: string | string[], options:
 
   const res = await client.post(`${URL_TRANSLATOR}?from=zh&to=en`, { headers: getApiHeaders(URL_BASE), form }).json()
   const textEn = (res as any).trans_result.data[0].dst as string
-  return textEn.split(SPLIT_STR).map(i => i.trim())
+  return textEn.split(SPLIT_STR).map((i, index) => ({ zh: texts[index], en: i.trim() }))
 }
