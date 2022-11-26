@@ -14,7 +14,15 @@
     "translate",
     "fanyi"
   ],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/space-77/node-translates"
+  },
+  "bugs": {
+    "url": "https://github.com/space-77/node-translates/issues"
+  },
+  "homepage": "https://github.com/space-77/node-translates#README",
+  "author": "space-77",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.2.3",
