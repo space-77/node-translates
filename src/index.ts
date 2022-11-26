@@ -1,2 +1,3 @@
 import bingTranslator from './bing'
-export { bingTranslator }
+import baiduTranslator from './baidu'
+export { bingTranslator, baiduTranslator }
