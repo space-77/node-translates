@@ -56,7 +56,8 @@ class Iflyrec {
 }
 
 export default async function iflyrecTranslator(texts: string | string[]) {
-  const cookies = await Iflyrec.getCookies()
+  // const cookies = await Iflyrec.getCookies()
+
   const contents = Array.isArray(texts) ? texts : [texts]
 
   const json = {
@@ -66,11 +67,13 @@ export default async function iflyrecTranslator(texts: string | string[]) {
   }
   const headers = getApiHeaders(URL_BASE) as Record<string, string>
   headers['Content-Type'] = 'application/json; charset=UTF-8'
-  headers['Cookie'] = Object.entries(cookies)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('; ')
+  // headers['Cookie'] = Object.entries(cookies)
+  //   .map(([key, value]) => `${key}=${value}`)
+  //   .join('; ')
 
-  const res = await client.post(`${URL_API}?t=${Date.now()}`, { json, headers }).json()
+  // 讯飞这个接口暂时不需要做验证
+  const res = (await client.post(`${URL_API}?t=${Date.now()}`, { json, headers }).json()) as any
+  if (res.code !== '000000') throw new Error(res.desc)
   const textEnList = (res as any).biz as { frontBlankLine: number; translateResult: string }[]
   return textEnList.map(({ translateResult }, index) => ({ zh: contents[index], en: translateResult }))
 }
