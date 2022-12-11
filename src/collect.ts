@@ -34,30 +34,30 @@ class Collect {
       const { waitList, pageNumber } = this
       this.waitList = []
       const cutWaitList = cutArray(waitList, pageNumber)
-      for await (const iterator of cutWaitList) {
-        const group = _.groupBy(iterator, 'fromTo')
-        await this.startTranslate(Object.entries(group))
-      }
-
-      // if (cutWaitList.length > 2) {
-      //   const doubleCutWaitList = cutArray(cutWaitList, 2)
-      //   let index = 0
-      //   for await (const pages of doubleCutWaitList) {
-      //     index++
-      //     console.log(`第 ${index} 批翻译`)
-      //     await Promise.all(
-      //       pages.map(async textInfoList => {
-      //         const group = _.groupBy(textInfoList, 'fromTo')
-      //         await this.startTranslate(Object.entries(group))
-      //       })
-      //     )
-      //   }
-      // } else {
-      //   cutWaitList.forEach(textInfoList => {
-      //     const group = _.groupBy(textInfoList, 'fromTo')
-      //     this.startTranslate(Object.entries(group))
-      //   })
+      // for await (const iterator of cutWaitList) {
+      //   const group = _.groupBy(iterator, 'fromTo')
+      //   await this.startTranslate(Object.entries(group))
       // }
+
+      if (cutWaitList.length > 10) {
+        const doubleCutWaitList = cutArray(cutWaitList, 10)
+        let index = 0
+        for await (const pages of doubleCutWaitList) {
+          index++
+          console.log(`第 ${index} 批翻译`)
+          await Promise.all(
+            pages.map(async textInfoList => {
+              const group = _.groupBy(textInfoList, 'fromTo')
+              await this.startTranslate(Object.entries(group))
+            })
+          )
+        }
+      } else {
+        cutWaitList.forEach(textInfoList => {
+          const group = _.groupBy(textInfoList, 'fromTo')
+          this.startTranslate(Object.entries(group))
+        })
+      }
     }, this.time)
   }
 

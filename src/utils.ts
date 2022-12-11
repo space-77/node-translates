@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from 'puppeteer-core'
+import puppeteer, { Browser } from 'puppeteer-core'
 import { SPLIT_ENTER, SPLIT_ENTER_REG } from './config'
 
 const chromePaths = require('chrome-paths')
@@ -15,12 +15,12 @@ export function getChromePath() {
 }
 
 export class IBrowser {
-  page!: Page
-  time = Date.now()
-  useCount = 0
-  static instance: IBrowser
+  protected time = Date.now()
+  protected useCount = 0
+  protected initialize?: Promise<Browser>
+  protected static instance: IBrowser
+  protected closeTimer?: NodeJS.Timeout
   chrome!: Browser | null
-  closeTimer?: NodeJS.Timeout
 
   constructor() {
     if (!IBrowser.instance) IBrowser.instance = this
@@ -30,16 +30,22 @@ export class IBrowser {
     this.useCount++
     clearTimeout(this.closeTimer)
     if (!this.chrome) {
+      if (this.initialize) {
+        await this.initialize
+        this.initialize = undefined
+        return
+      }
       const chromePath = getChromePath()
-      this.chrome = await puppeteer.launch({ executablePath: chromePath, headless: false })
+      // this.initialize = puppeteer.launch({ executablePath: chromePath, headless: false })
+      this.initialize = puppeteer.launch({ executablePath: chromePath })
+      this.chrome = await this.initialize
+      // this.chrome = await puppeteer.launch({ executablePath: chromePath, headless: false })
       // this.chrome = await puppeteer.launch({ executablePath: chromePath })
     }
   }
 
-  getPage() {}
-
   async close() {
-    console.log(this.useCount)
+    // console.log(this.useCount)
     this.useCount--
     if (this.useCount <= 0) {
       clearTimeout(this.closeTimer)
@@ -53,7 +59,7 @@ export class IBrowser {
         } catch (error) {
           console.error(error)
         }
-      }, 300)
+      }, 500)
     }
   }
 

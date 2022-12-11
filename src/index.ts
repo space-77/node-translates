@@ -13,7 +13,7 @@ function bingTranslator(info: TextInfo) {
 }
 function baiduTranslator(info: TextInfo) {
   const key = TranslateNames.BAIDU
-  collector.createCollect(key, _baiduTranslator, 1000)
+  collector.createCollect(key, _baiduTranslator, 50)
   return collector.addTranslate(info, key)
 }
 function iflyrecTranslator(info: TextInfo) {
