@@ -17,15 +17,16 @@ export type WaitList = {
     resolve: (res: WaitResolve) => void;
     reject: (err?: any) => void;
 };
-export type StartTranslate = (dataList: [string, WaitList[]][]) => void;
+export type StartTranslate = (dataList: [string, WaitList[]][]) => Promise<any>;
 declare class Collect {
     startTranslate: StartTranslate;
+    pageNumber: number;
     time: number;
     timer?: NodeJS.Timeout;
     waitList: WaitList[];
-    constructor(startTranslate: StartTranslate);
-    removeWaitList(waitList: WaitList[]): void;
-    start(): void;
+    constructor(startTranslate: StartTranslate, pageNumber?: number);
+    protected removeWaitList(waitList: WaitList[]): void;
+    protected start(): void;
     protected reStart(): void;
     add({ text, from, to }: TextInfo): Promise<WaitResolve>;
 }
@@ -34,7 +35,7 @@ export default class Collector {
         key: TranslateNames;
         collect: Collect;
     }[];
-    createCollect(key: TranslateNames, translate: StartTranslate): void;
+    createCollect(key: TranslateNames, translate: StartTranslate, pageNumber?: number): void;
     getCollect(key: TranslateNames): Collect | undefined;
     addTranslate(info: TextInfo, key: TranslateNames): Promise<WaitResolve>;
 }
