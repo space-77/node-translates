@@ -1,4 +1,2 @@
-export default function bingTranslator(texts: string | string[]): Promise<{
-    zh: string;
-    en: string;
-}[]>;
+import { WaitList } from './collect';
+export default function bingTranslator(dataList: [string, WaitList[]][]): Promise<void>;
