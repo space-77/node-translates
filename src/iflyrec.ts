@@ -1,22 +1,12 @@
 import client from './client'
+import { getChromePath, restoreEnter } from './utils'
 import { getApiHeaders } from './common'
 import puppeteer, { Page, Browser } from 'puppeteer-core'
-
-const chromePaths = require('chrome-paths')
-const { getEdgePath } = require('edge-paths')
+import { WaitList } from './collect'
+import { Languages } from './config'
 
 const URL_BASE = 'https://fanyi.iflyrec.com'
 const URL_API = `${URL_BASE}/TranslationService/v1/textTranslation`
-
-function getChromePath() {
-  const { chrome, chromium, chromeCanary } = chromePaths
-  const chromePath = chrome || getEdgePath() || chromium || chromeCanary
-  if (!chromePath) {
-    throw new Error('没找到 chrome 或 chromium内核 的浏览器，请安装 chrome 或 chromium内核 的浏览器后重试')
-  }
-
-  return chromePath
-}
 
 class IBrowser {
   page!: Page
@@ -55,25 +45,55 @@ class Iflyrec {
   }
 }
 
-export default async function iflyrecTranslator(texts: string | string[]) {
+function getLanguage(language: Languages) {
+  switch (language) {
+    case Languages.ZH:
+      return '1'
+    case Languages.EN:
+      return '2'
+    case Languages.JP:
+      return 3
+    case Languages.KOR:
+      return 4
+    case Languages.RU:
+      return 5
+    case Languages.FRA:
+      return 6
+    case Languages.DE:
+      return 13
+  }
+}
+
+// export default async function iflyrecTranslator(texts: string | string[]) {
+export default async function iflyrecTranslator(dataList: [string, WaitList[]][]) {
   // const cookies = await Iflyrec.getCookies()
 
-  const contents = Array.isArray(texts) ? texts : [texts]
+  const proms = dataList.map(async ([fromTo, value]) => {
+    const contents = value.map(i => i.text)
+    const [from, to] = fromTo.split('_').map(i => getLanguage(i as Languages))
+    const json = { to, from, contents: contents.map(text => ({ frontBlankLine: 0, text })) }
+    const headers = getApiHeaders(URL_BASE) as Record<string, string>
+    headers['Content-Type'] = 'application/json; charset=UTF-8'
+    // headers['Cookie'] = Object.entries(cookies)
+    //   .map(([key, value]) => `${key}=${value}`)
+    //   .join('; ')
+    try {
+      // 讯飞这个接口暂时不需要做验证
+      const res = (await client.post(`${URL_API}?t=${Date.now()}`, { json, headers }).json()) as any
+      if (res.code !== '000000') {
+        value.forEach(i => i.reject(res.desc))
+        throw new Error(res.desc)
+      }
+      const textEnList = (res as any).biz as { frontBlankLine: number; translateResult: string }[]
+      textEnList.map(({ translateResult }, index) => {
+        const textItem = value[index]
+        textItem.resolve({ text: restoreEnter(textItem.text), dst: restoreEnter(translateResult) })
+      })
+    } catch (error) {
+      console.error(error)
+      value.forEach(i => i.reject('translate fail'))
+    }
+  })
 
-  const json = {
-    to: '2',
-    from: '1',
-    contents: contents.map(text => ({ frontBlankLine: 0, text }))
-  }
-  const headers = getApiHeaders(URL_BASE) as Record<string, string>
-  headers['Content-Type'] = 'application/json; charset=UTF-8'
-  // headers['Cookie'] = Object.entries(cookies)
-  //   .map(([key, value]) => `${key}=${value}`)
-  //   .join('; ')
-
-  // 讯飞这个接口暂时不需要做验证
-  const res = (await client.post(`${URL_API}?t=${Date.now()}`, { json, headers }).json()) as any
-  if (res.code !== '000000') throw new Error(res.desc)
-  const textEnList = (res as any).biz as { frontBlankLine: number; translateResult: string }[]
-  return textEnList.map(({ translateResult }, index) => ({ zh: contents[index], en: translateResult }))
+  await Promise.all(proms)
 }

@@ -1,11 +1,6 @@
-import { bingTranslator } from '../src/index'
+import { bingTranslator, Languages } from '../src/index'
 
-test('测试 bing 单个句翻译', async () => {
-  const text = (await bingTranslator('你好')) ?? []
-  expect(text.map(i => i.en).join()).toBe('Hello')
-})
-
-test('测试 bing 多个多句翻译', async () => {
-  const text = (await bingTranslator(['你', '好', '沙漏', '湿巾', '绿萝', '口罩', '下班'])) ?? []
-  expect(text.map(i => i.en).join(',')).toBe(['You', 'Good', 'Hourglass', 'Wet wipes', 'Green rose', 'Masks', 'Work'].join(','))
+test('测试 bing 翻译', async () => {
+  const text = await bingTranslator({ text: '你好', from: Languages.ZH, to: Languages.EN })
+  expect(text.dst).toBe('Hello')
 })
