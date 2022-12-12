@@ -15,8 +15,8 @@ import { baiduTranslator, bingTranslator, iflyrecTranslator, Languages } from '.
     let count = 0
     texts.forEach(async text => {
       await baiduTranslator({ text, from: Languages.ZH, to: Languages.EN })
-      // count++
-      // console.log(count)
+      count++
+      console.log(count)
     })
 
     // const res2 = await baiduTranslator({ text: '你好', from: Languages.ZH, to: Languages.RU })

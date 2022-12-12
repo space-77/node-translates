@@ -8,12 +8,12 @@ const collector = new Collector()
 
 function bingTranslator(info: TextInfo) {
   const key = TranslateNames.BING
-  collector.createCollect(key, _bingTranslator, 500)
+  collector.createCollect(key, _bingTranslator)
   return collector.addTranslate(info, key)
 }
 function baiduTranslator(info: TextInfo) {
   const key = TranslateNames.BAIDU
-  collector.createCollect(key, _baiduTranslator, 50)
+  collector.createCollect(key, _baiduTranslator)
   return collector.addTranslate(info, key)
 }
 function iflyrecTranslator(info: TextInfo) {
