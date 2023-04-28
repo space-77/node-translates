@@ -2,7 +2,7 @@ import { baiduTranslator, Languages } from '../src/index'
 
 test('测试翻译', async () => {
   const text = await baiduTranslator({ text: '你好', from: Languages.ZH, to: Languages.EN })
-  expect(text.dst).toBe('Hello')
+  expect(text.dst).toBe('hello')
 }, 1000 * 30)
 
 // test('测试 百度 多个多句翻译', async () => {

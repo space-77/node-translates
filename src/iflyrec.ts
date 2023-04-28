@@ -1,4 +1,4 @@
-import client from './client'
+import axios from 'axios'
 import { getChromePath, restoreEnter } from './utils'
 import { getApiHeaders } from './common'
 import puppeteer, { Page, Browser } from 'puppeteer-core'
@@ -79,12 +79,12 @@ export default async function iflyrecTranslator(dataList: [string, WaitList[]][]
     //   .join('; ')
     try {
       // 讯飞这个接口暂时不需要做验证
-      const res = (await client.post(`${URL_API}?t=${Date.now()}`, { json, headers }).json()) as any
-      if (res.code !== '000000') {
-        value.forEach(i => i.reject(res.desc))
-        throw new Error(res.desc)
+      const { data } = (await axios.post(`${URL_API}?t=${Date.now()}`, json, { headers })) as any
+      if (data.code !== '000000') {
+        value.forEach(i => i.reject(data.desc))
+        throw new Error(data.desc)
       }
-      const textEnList = (res as any).biz as { frontBlankLine: number; translateResult: string }[]
+      const textEnList = (data as any).biz as { frontBlankLine: number; translateResult: string }[]
       textEnList.map(({ translateResult }, index) => {
         const textItem = value[index]
         textItem.resolve({ text: restoreEnter(textItem.text), dst: restoreEnter(translateResult) })

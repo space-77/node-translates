@@ -68,7 +68,7 @@ export const getHostInfo = (hostHtml: string) => {
 }
 
 export function getToken(host_html: string): Record<string, string> {
-  let [, result_str] = host_html.match('var params_RichTranslateHelper = (.*?);') ?? []
+  let [, result_str] = host_html.match('var params_AbusePreventionHelper = (.*?);') ?? []
   let result = eval(result_str)
   return { key: result[0], token: result[1] }
 }

@@ -6,15 +6,15 @@ import { baiduTranslator, bingTranslator, iflyrecTranslator, Languages } from '.
     // const res = await baiduTranslator('你好')
     // console.log(res)
     // const res1 = await baiduTranslator(['你', '好', '沙漏', '湿巾', '绿萝', '口罩', '下班'])
-    // const texts = ['你好', '口罩', '下班']
-    const texts = require(path.join(__dirname, '../mock/index.json')) as string[]
+    const texts = ['你好', '口罩', '下班']
+    // const texts = require(path.join(__dirname, '../mock/index.json')) as string[]
     // const texts = require(path.join(__dirname, '../mock/count20.json')) as string[]
 
     // console.log(texts.length);
 
     let count = 0
     texts.forEach(async text => {
-      await baiduTranslator({ text, from: Languages.ZH, to: Languages.EN })
+      await bingTranslator({ text, from: Languages.ZH, to: Languages.EN })
       count++
       console.log(count)
     })

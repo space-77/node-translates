@@ -1,5 +1,5 @@
-import got from 'got-cjs'
-import { CookieJar } from 'tough-cookie'
+// import got from 'got-cjs'
+// import { CookieJar } from 'tough-cookie'
 
-export const cookieJar = new CookieJar()
-export default got.extend({ cookieJar })
+// export const cookieJar = new CookieJar()
+// export default got.extend({ cookieJar })
