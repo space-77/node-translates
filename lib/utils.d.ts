@@ -1,18 +1,17 @@
 /// <reference types="node" />
-import { Browser, Page } from 'puppeteer-core';
+import puppeteer, { Browser } from 'puppeteer-core';
 export declare function getChromePath(): any;
 export declare class IBrowser {
-    page: Page;
-    time: number;
-    useCount: number;
-    static instance: IBrowser;
+    protected time: number;
+    protected useCount: number;
+    protected initialize?: Promise<Browser>;
+    protected static instance: IBrowser;
+    protected closeTimer?: NodeJS.Timeout;
     chrome: Browser | null;
-    closeTimer?: NodeJS.Timeout;
     constructor();
     init(): Promise<void>;
-    getPage(): void;
     close(): Promise<void>;
-    newPage(): Promise<Page>;
+    newPage(): Promise<puppeteer.Page>;
 }
 export declare function cutArray<T>(array: T[], subLength: number): T[][];
 export declare function restoreEnter(text: string): string;
