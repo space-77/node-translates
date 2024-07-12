@@ -73,8 +73,8 @@ export function getToken(host_html: string): Record<string, string> {
   return { key: result[0], token: result[1] }
 }
 
-export const sleep = async (seconds: number) => {
-  return new Promise(resolve => setTimeout(resolve, seconds * 1000))
+export const sleep = async (time: number) => {
+  return new Promise(resolve => setTimeout(resolve, time))
 }
 
 export default config

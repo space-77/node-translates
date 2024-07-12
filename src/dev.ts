@@ -14,8 +14,10 @@ import { baiduTranslator, bingTranslator, iflyrecTranslator, Languages } from '.
 
     let count = 0
     texts.forEach(async text => {
-      await bingTranslator({ text, from: Languages.ZH, to: Languages.EN })
+      // await bingTranslator({ text, from: Languages.ZH, to: Languages.EN })
+      const res = await baiduTranslator({ text, from: Languages.ZH, to: Languages.EN })
       count++
+      console.log(res)
       console.log(count)
     })
 
