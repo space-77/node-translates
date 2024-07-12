@@ -28,5 +28,5 @@ export declare const getHostInfo: (hostHtml: string) => {
     ig: string;
 };
 export declare function getToken(host_html: string): Record<string, string>;
-export declare const sleep: (seconds: number) => Promise<unknown>;
+export declare const sleep: (time: number) => Promise<unknown>;
 export default config;
